@@ -56,6 +56,9 @@ for contour in contours:
 
     if w > 150 and h > 150 and w < 850 and h < 350:
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 3)
+
+        xTextCoords = x + w // 2 - 50
+        yTextCoords = y + h // 2 + 10
         
         roi = gray[y:y+h, x:x+w]
         
@@ -64,7 +67,7 @@ for contour in contours:
         
         print(f"Detected key: {text}")
         
-        cv2.putText(image, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
+        cv2.putText(image, text, (xTextCoords, yTextCoords), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 4)
 
 cv2.imshow("Detected Keys", image)
 
