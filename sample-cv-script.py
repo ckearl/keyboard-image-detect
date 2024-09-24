@@ -5,6 +5,7 @@ import os
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 KEYBOARD_PICTURE_PATH = ROOT_DIR + '/keyboard_picture.jpg'
 
+
 def resize_with_aspect_ratio(image, target_file_size_kb, save_path, max_attempts=10):
     original_height, original_width = image.shape[:2]
 
@@ -23,14 +24,15 @@ def resize_with_aspect_ratio(image, target_file_size_kb, save_path, max_attempts
         file_size_kb = os.path.getsize(temp_save_path) / 1024
 
         print(f"Attempt {
-              attempt+1}: Image size = {file_size_kb:.2f} KB at {new_width}x{new_height}")
+              attempt+1}: Image size = {file_size_kb:.2f} KB at {new_width}x{new_height}"
+              )
 
         if file_size_kb <= target_file_size_kb:
             os.rename(temp_save_path, save_path)
             print(f"Success: Image resized to {new_width}x{
-                  new_height} and saved at {file_size_kb:.2f} KB")
+                  new_height} and saved at {file_size_kb:.2f} KB"
+                  )
             return
-
 
     print("Warning: Could not reduce image to target file size within the maximum number of attempts.")
 
@@ -49,7 +51,8 @@ _, thresh = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY_INV)
 
 edges = cv2.Canny(thresh, 100, 200)
 
-contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+contours, _ = cv2.findContours(
+    edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 for contour in contours:
     x, y, w, h = cv2.boundingRect(contour)
@@ -59,15 +62,16 @@ for contour in contours:
 
         xTextCoords = x + w // 2 - 50
         yTextCoords = y + h // 2 + 10
-        
+
         roi = gray[y:y+h, x:x+w]
-        
+
         config = '--psm 8'
         text = pytesseract.image_to_string(roi, config=config).strip()
-        
+
         print(f"Detected key: {text}")
-        
-        cv2.putText(image, text, (xTextCoords, yTextCoords), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 4)
+
+        cv2.putText(image, text, (xTextCoords, yTextCoords),
+                    cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 4)
 
 cv2.imshow("Detected Keys", image)
 
